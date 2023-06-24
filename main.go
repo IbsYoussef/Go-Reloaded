@@ -6,6 +6,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"unicode"
 )
 
 // Hexadecimal to Decimal conversion
@@ -99,7 +100,7 @@ func applyModifications(text string) string {
 func toUpper(words []string) []string {
 	modifiedWords := make([]string, len(words))
 	for i, word := range words {
-		modifiedWords[i] = strings.ToUpper(word)
+		modifiedWords[i] = strings.Map(unicode.ToUpper, word)
 	}
 	return modifiedWords
 }
@@ -107,7 +108,7 @@ func toUpper(words []string) []string {
 func toLower(words []string) []string {
 	modifiedWords := make([]string, len(words))
 	for i, word := range words {
-		modifiedWords[i] = strings.ToLower(word)
+		modifiedWords[i] = strings.Map(unicode.ToLower, word)
 	}
 	return modifiedWords
 }
@@ -115,7 +116,13 @@ func toLower(words []string) []string {
 func capitalize(words []string) []string {
 	modifiedWords := make([]string, len(words))
 	for i, word := range words {
-		modifiedWords[i] = strings.Title(word)
+		if len(word) > 0 {
+			first := unicode.ToUpper(rune(word[0]))
+			rest := strings.Map(unicode.ToLower, word[1:])
+			modifiedWords[i] = string(first) + rest
+		} else {
+			modifiedWords[i] = word
+		}
 	}
 	return modifiedWords
 }
