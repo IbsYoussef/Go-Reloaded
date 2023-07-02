@@ -8,34 +8,15 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"testing"
 	"unicode"
 )
 
-// Configuration represents a modification configuration.
-type Configuration struct {
-	Search  string
-	Replace string
-	Number  int
-}
+var punctuationRegex = regexp.MustCompile(`([.,!?;:])\s*`)
+var ellipsisRegex = regexp.MustCompile(`\.{3}`)
+var exclamationRegex = regexp.MustCompile(`[!?]`)
+var quoteRegex = regexp.MustCompile(`'([^']*)'`)
+var vowelRegex = regexp.MustCompile(`(?i)\ba\s([aeiouh])`)
 
-var (
-	configurations = []Configuration{
-		{Search: "(hex)", Replace: "${dec}"},
-		{Search: "(bin)", Replace: "${dec}"},
-		{Search: "(up)", Replace: "${up}"},
-		{Search: "(low)", Replace: "${low}"},
-		{Search: "(cap)", Replace: "${cap}"},
-	}
-
-	punctuationRegex = regexp.MustCompile(`([.,!?;:])\s*`)
-	ellipsisRegex    = regexp.MustCompile(`\.{3}`)
-	exclamationRegex = regexp.MustCompile(`[!?]`)
-	quoteRegex       = regexp.MustCompile(`'([^']*)'`)
-	vowelRegex       = regexp.MustCompile(`(?i)\ba\s([aeiouh])`)
-)
-
-// ReplaceHex replaces hexadecimal numbers with their decimal equivalent.
 func ReplaceHex(text string) string {
 	hexRegex := regexp.MustCompile(`\b(0x[0-9A-Fa-f]+)\b`)
 	return hexRegex.ReplaceAllStringFunc(text, func(hex string) string {
@@ -48,7 +29,6 @@ func ReplaceHex(text string) string {
 	})
 }
 
-// ReplaceBin replaces binary numbers with their decimal equivalent.
 func ReplaceBin(text string) string {
 	binRegex := regexp.MustCompile(`\b(0b[01]+)\b`)
 	return binRegex.ReplaceAllStringFunc(text, func(bin string) string {
@@ -61,7 +41,6 @@ func ReplaceBin(text string) string {
 	})
 }
 
-// capitalizeWord capitalizes a word based on the specified case.
 func capitalizeWord(word string, caseType rune) string {
 	switch caseType {
 	case 'u':
@@ -69,13 +48,12 @@ func capitalizeWord(word string, caseType rune) string {
 	case 'l':
 		return strings.ToLower(word)
 	case 'c':
-		return strings.Title(strings.ToLower(word))
+		return strings.ToUpper(string(word[0])) + word[1:]
 	default:
 		return word
 	}
 }
 
-// ReplaceCase replaces words based on case modification configurations.
 func ReplaceCase(text string) string {
 	return quoteRegex.ReplaceAllStringFunc(text, func(quote string) string {
 		quote = strings.Trim(quote, "'")
@@ -110,126 +88,84 @@ func ReplaceCase(text string) string {
 	})
 }
 
-// FormatPunctuation formats punctuation marks in the text.
-func FormatPunctuation(text string) string {
+func formatPunctuation(text string) string {
 	text = punctuationRegex.ReplaceAllString(text, "$1 ")
 	text = ellipsisRegex.ReplaceAllString(text, "...")
-	text = exclamationRegex.ReplaceAllString(text, "")
+	text = exclamationRegex.ReplaceAllStringFunc(text, func(exclamation string) string {
+		if len(exclamation) > 1 {
+			return exclamation
+		}
+		return exclamation + exclamation
+	})
 	return text
 }
 
-// ReplaceVowelA replaces "a" with "an" if the next word begins with a vowel or "h".
-func ReplaceVowelA(text string) string {
-	return vowelRegex.ReplaceAllString(text, " an $1")
+func formatQuotes(text string) string {
+	return quoteRegex.ReplaceAllString(text, "'$1'")
 }
 
-// ApplyModifications applies all the required modifications to the given text.
-func ApplyModifications(text string) string {
+func replaceVowels(text string) string {
+	return vowelRegex.ReplaceAllStringFunc(text, func(match string) string {
+		return strings.Replace(match, " a ", " an ", -1)
+	})
+}
+
+func ProcessText(text string) string {
+	text = ReplaceCase(text)
 	text = ReplaceHex(text)
 	text = ReplaceBin(text)
-	text = ReplaceCase(text)
-	text = FormatPunctuation(text)
-	text = ReplaceVowelA(text)
+	text = formatPunctuation(text)
+	text = formatQuotes(text)
+	text = replaceVowels(text)
 	return text
-}
-
-// ProcessFile reads the input file, applies modifications, and writes the result to the output file.
-func ProcessFile(inputFile, outputFile string) error {
-	input, err := os.Open(inputFile)
-	if err != nil {
-		return fmt.Errorf("failed to open input file: %w", err)
-	}
-	defer input.Close()
-
-	output, err := os.Create(outputFile)
-	if err != nil {
-		return fmt.Errorf("failed to create output file: %w", err)
-	}
-	defer output.Close()
-
-	scanner := bufio.NewScanner(input)
-	for scanner.Scan() {
-		line := scanner.Text()
-		modifiedLine := ApplyModifications(line)
-		_, err := fmt.Fprintln(output, modifiedLine)
-		if err != nil {
-			return fmt.Errorf("failed to write to output file: %w", err)
-		}
-	}
-
-	if err := scanner.Err(); err != nil {
-		return fmt.Errorf("error scanning input file: %w", err)
-	}
-
-	return nil
-}
-
-// TestProcessFile tests the ProcessFile function.
-func TestProcessFile(t *testing.T) {
-	inputFile := "sample.txt"
-	outputFile := "result.txt"
-
-	err := ProcessFile(inputFile, outputFile)
-	if err != nil {
-		t.Errorf("ProcessFile returned an error: %v", err)
-	}
-
-	expectedFile := "expected.txt"
-	expectedLines, err := readLines(expectedFile)
-	if err != nil {
-		t.Fatalf("Failed to read expected file: %v", err)
-	}
-
-	resultLines, err := readLines(outputFile)
-	if err != nil {
-		t.Fatalf("Failed to read result file: %v", err)
-	}
-
-	if len(expectedLines) != len(resultLines) {
-		t.Errorf("Mismatched line count. Expected: %d, Got: %d", len(expectedLines), len(resultLines))
-	}
-
-	for i := range expectedLines {
-		if expectedLines[i] != resultLines[i] {
-			t.Errorf("Mismatched content at line %d. Expected: %s, Got: %s", i+1, expectedLines[i], resultLines[i])
-		}
-	}
-}
-
-// readLines reads all lines from a file and returns them as a slice of strings.
-func readLines(filename string) ([]string, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, fmt.Errorf("failed to open file: %w", err)
-	}
-	defer file.Close()
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-
-	if err := scanner.Err(); err != nil {
-		return nil, fmt.Errorf("failed to read file: %w", err)
-	}
-
-	return lines, nil
 }
 
 func main() {
 	if len(os.Args) < 3 {
-		fmt.Println("Usage: go run . <input-file> <output-file>")
-		os.Exit(1)
+		fmt.Println("Usage: go run main.go <input-file> <output-file>")
+		return
 	}
 
 	inputFile := os.Args[1]
 	outputFile := os.Args[2]
 
-	err := ProcessFile(inputFile, outputFile)
+	// Read input file
+	file, err := os.Open(inputFile)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error opening input file:", err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	var lines []string
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		log.Fatal("Error reading input file:", err)
 	}
 
-	fmt.Println("Modifications complete.")
+	// Process text
+	var processedLines []string
+	for _, line := range lines {
+		processedLines = append(processedLines, ProcessText(line))
+	}
+
+	// Write output file
+	output, err := os.Create(outputFile)
+	if err != nil {
+		log.Fatal("Error creating output file:", err)
+	}
+	defer output.Close()
+
+	writer := bufio.NewWriter(output)
+	for _, line := range processedLines {
+		_, err := writer.WriteString(line + "\n")
+		if err != nil {
+			log.Fatal("Error writing to output file:", err)
+		}
+	}
+	writer.Flush()
+
+	fmt.Println("Text processed and saved to", outputFile)
 }

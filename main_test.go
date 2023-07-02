@@ -32,9 +32,9 @@ func TestReplaceCase(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result := ReplaceCase(test.expected) // Swap input and expected
-		if result != test.input {            // Swap input and expected
-			t.Errorf("Input: %s\nExpected: %s\nGot: %s\n", test.expected, test.input, result) // Swap input and expected
+		result := ReplaceCase(test.input) // Use test.input instead of test.expected
+		if result != test.expected {
+			t.Errorf("Input: %s\nExpected: %s\nGot: %s\n", test.input, test.expected, result) // Swap input and expected
 		}
 	}
 }
