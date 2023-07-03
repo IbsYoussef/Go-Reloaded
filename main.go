@@ -2,137 +2,159 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
 	"unicode"
 )
 
-var punctuationRegex = regexp.MustCompile(`([.,!?;:])\s*`)
-var ellipsisRegex = regexp.MustCompile(`\.{3}`)
-var exclamationRegex = regexp.MustCompile(`[!?]`)
-var quoteRegex = regexp.MustCompile(`'([^']*)'`)
-var vowelRegex = regexp.MustCompile(`(?i)\ba\s([aeiouh])`)
-
-func ReplaceHex(text string) string {
-	hexRegex := regexp.MustCompile(`\b(0x[0-9A-Fa-f]+)\b`)
-	return hexRegex.ReplaceAllStringFunc(text, func(hex string) string {
-		dec, err := strconv.ParseInt(hex[2:], 16, 64)
-		if err != nil {
-			log.Println("Error converting hex to decimal:", err)
-			return hex
-		}
-		return strconv.FormatInt(dec, 10)
-	})
+func hexToDec(hex string) string {
+	dec, err := strconv.ParseInt(hex, 16, 64)
+	if err != nil {
+		return ""
+	}
+	return strconv.FormatInt(dec, 10)
 }
 
-func ReplaceBin(text string) string {
-	binRegex := regexp.MustCompile(`\b(0b[01]+)\b`)
-	return binRegex.ReplaceAllStringFunc(text, func(bin string) string {
-		dec, err := strconv.ParseInt(bin[2:], 2, 64)
-		if err != nil {
-			log.Println("Error converting bin to decimal:", err)
-			return bin
-		}
-		return strconv.FormatInt(dec, 10)
-	})
+func binToDec(bin string) string {
+	dec, err := strconv.ParseInt(bin, 2, 64)
+	if err != nil {
+		return ""
+	}
+	return strconv.FormatInt(dec, 10)
 }
 
-func capitalizeWord(word string, caseType rune) string {
-	switch caseType {
-	case 'u':
-		return strings.ToUpper(word)
-	case 'l':
-		return strings.ToLower(word)
-	case 'c':
-		return strings.ToUpper(string(word[0])) + word[1:]
-	default:
+func formatPunctuations(text string) string {
+	punctuations := []string{".", ",", "!", "?", ":", ";"}
+
+	for _, punctuation := range punctuations {
+		text = strings.ReplaceAll(text, " "+punctuation, punctuation)
+	}
+
+	text = strings.ReplaceAll(text, " '", "'")
+	text = strings.ReplaceAll(text, "' ", "'")
+
+	text = strings.ReplaceAll(text, "...", "...")
+	text = strings.ReplaceAll(text, "!", "!")
+	text = strings.ReplaceAll(text, "?", "?")
+	text = strings.ReplaceAll(text, ": ", ":")
+	text = strings.ReplaceAll(text, "; ", ";")
+
+	return text
+}
+
+func modifyByNumber(word, action, num string) string {
+	n, err := strconv.Atoi(num)
+	if err != nil {
+		return ""
+	}
+
+	words := strings.Fields(word)
+	if len(words) == 0 || n >= len(words) {
+		return ""
+	}
+
+	switch action {
+	case "low":
+		words[n-1] = strings.ToLower(words[n-1])
+	case "up":
+		words[n-1] = strings.ToUpper(words[n-1])
+	case "cap":
+		words[n-1] = capitalizeWord(words[n-1])
+
+	}
+
+	return strings.Join(words, " ")
+}
+
+func capitalizeWord(word string) string {
+	runes := []rune(word)
+	runes[0] = unicode.ToUpper(runes[0])
+	return string(runes)
+}
+
+func modifyText(input string) string {
+	lines := strings.Split(input, "\n")
+	var output []string
+
+	for _, line := range lines {
+		words := strings.Fields(line)
+		for i, word := range words {
+			switch {
+			case word == "(hex)":
+				words[i] = hexToDec(words[i-1])
+				words[i-1] = ""
+			case word == "(bin)":
+				words[i] = binToDec(words[i-1])
+				words[i-1] = ""
+			case word == "(up)":
+				words[i] = strings.ToUpper(words[i-1])
+				words[i-1] = ""
+			case word == "(low)":
+				words[i] = strings.ToLower(words[i-1])
+				words[i-1] = ""
+			case word == "(cap)":
+				words[i] = capitalizeWord(words[i-1])
+				words[i-1] = ""
+			case strings.HasPrefix(word, "(low,"):
+				parts := strings.SplitN(word, ",", 2)
+				if len(parts) == 2 {
+					num, err := strconv.Atoi(strings.TrimSpace(parts[1]))
+					if err == nil && num > 0 && num <= i {
+						words[i-num] = strings.ToLower(words[i-num])
+						words[i-1] = ""
+					}
+				}
+			case strings.HasPrefix(word, "(up,"):
+				parts := strings.SplitN(word, ",", 2)
+				if len(parts) == 2 {
+					num, err := strconv.Atoi(strings.TrimSpace(parts[1]))
+					if err == nil && num > 0 && num <= i {
+						words[i-num] = strings.ToUpper(words[i-num])
+						words[i-1] = ""
+					}
+				}
+			case strings.HasPrefix(word, "(cap,"):
+				parts := strings.SplitN(word, ",", 2)
+				if len(parts) == 2 {
+					num, err := strconv.Atoi(strings.TrimSpace(parts[1]))
+					if err == nil && num > 0 && num <= i {
+						words[i-num] = capitalize(words[i-num])
+						words[i-1] = ""
+					}
+				}
+			}
+		}
+
+		line = strings.Join(words, " ")
+		line = formatPunctuations(line)
+
+		output = append(output, line)
+	}
+
+	return strings.Join(output, "\n")
+}
+
+func capitalize(word string) string {
+	if len(word) == 0 {
 		return word
 	}
-}
-
-func ReplaceCase(text string) string {
-	return quoteRegex.ReplaceAllStringFunc(text, func(quote string) string {
-		quote = strings.Trim(quote, "'")
-		parts := strings.Split(quote, " ")
-		if len(parts) != 2 {
-			return quote
-		}
-
-		mod, word := parts[0], parts[1]
-		if len(mod) == 0 || len(word) == 0 {
-			return quote
-		}
-
-		// Extract the case type and word count (if provided)
-		caseType := rune(mod[0])
-		wordCount := -1
-		if len(mod) > 1 && unicode.IsDigit(rune(mod[1])) {
-			wordCount = int(mod[1] - '0')
-		}
-
-		// Capitalize the word
-		words := strings.Fields(word)
-		if wordCount > len(words) || wordCount < 0 {
-			wordCount = len(words)
-		}
-
-		for i := 0; i < wordCount; i++ {
-			words[i] = capitalizeWord(words[i], caseType)
-		}
-
-		return strings.Join(words, " ")
-	})
-}
-
-func formatPunctuation(text string) string {
-	text = punctuationRegex.ReplaceAllString(text, "$1 ")
-	text = ellipsisRegex.ReplaceAllString(text, "...")
-	text = exclamationRegex.ReplaceAllStringFunc(text, func(exclamation string) string {
-		if len(exclamation) > 1 {
-			return exclamation
-		}
-		return exclamation + exclamation
-	})
-	return text
-}
-
-func formatQuotes(text string) string {
-	return quoteRegex.ReplaceAllString(text, "'$1'")
-}
-
-func replaceVowels(text string) string {
-	return vowelRegex.ReplaceAllStringFunc(text, func(match string) string {
-		return strings.Replace(match, " a ", " an ", -1)
-	})
-}
-
-func ProcessText(text string) string {
-	text = ReplaceCase(text)
-	text = ReplaceHex(text)
-	text = ReplaceBin(text)
-	text = formatPunctuation(text)
-	text = formatQuotes(text)
-	text = replaceVowels(text)
-	return text
+	return string(unicode.ToUpper(rune(word[0]))) + word[1:]
 }
 
 func main() {
-	if len(os.Args) < 3 {
-		fmt.Println("Usage: go run main.go <input-file> <output-file>")
-		return
+	args := os.Args[1:]
+	if len(args) != 2 {
+		log.Fatal("Please provide an input file and an output file.")
 	}
 
-	inputFile := os.Args[1]
-	outputFile := os.Args[2]
+	inputFile := args[0]
+	outputFile := args[1]
 
-	// Read input file
 	file, err := os.Open(inputFile)
 	if err != nil {
-		log.Fatal("Error opening input file:", err)
+		log.Fatal(err)
 	}
 	defer file.Close()
 
@@ -141,31 +163,28 @@ func main() {
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
+
 	if err := scanner.Err(); err != nil {
-		log.Fatal("Error reading input file:", err)
+		log.Fatal(err)
 	}
 
-	// Process text
-	var processedLines []string
-	for _, line := range lines {
-		processedLines = append(processedLines, ProcessText(line))
-	}
+	modifiedText := modifyText(strings.Join(lines, "\n"))
 
-	// Write output file
 	output, err := os.Create(outputFile)
 	if err != nil {
-		log.Fatal("Error creating output file:", err)
+		log.Fatal(err)
 	}
 	defer output.Close()
 
 	writer := bufio.NewWriter(output)
-	for _, line := range processedLines {
+	for _, line := range strings.Split(modifiedText, "\n") {
 		_, err := writer.WriteString(line + "\n")
 		if err != nil {
-			log.Fatal("Error writing to output file:", err)
+			log.Fatal(err)
 		}
 	}
+
 	writer.Flush()
 
-	fmt.Println("Text processed and saved to", outputFile)
+	log.Println("Modified text has been written to", outputFile)
 }
