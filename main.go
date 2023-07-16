@@ -8,13 +8,6 @@ import (
 	"unicode"
 )
 
-// import (
-// 	"fmt"
-// 	"os"
-// 	"strconv"
-// 	"strings"
-// )
-
 func cap(s string) string {
 	capitalizeWord := func(word string) string {
 		// Convert the word to a rune slice to process individual characters
@@ -90,6 +83,7 @@ func up(s string) string {
 	}
 	return strings.Join(sentence, " ")
 }
+
 func low(s string) string {
 	result := strings.Fields(s)
 	for i, v := range result {
