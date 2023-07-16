@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -124,34 +123,33 @@ func HexandBin(s string) string {
 	return strings.Join(result, " ")
 }
 
-func ReplacePunt(s string) string {
-	quotes := func(s string) string {
-		str := ""
-		var removeSpace bool // default false
-		for i, char := range s {
-			if char == 39 && s[i-1] == ' ' {
-				if removeSpace {
-					str = str[:len(str)-1]
-					str = str + string(char)
-					removeSpace = false
-				} else {
-					str = str + string(char)
-					removeSpace = true
-				}
-			} else if i > 1 && s[i-2] == 39 && s[i-1] == ' ' {
-				if removeSpace {
-					str = str[:len(str)-1]
-					str = str + string(char)
-				} else {
-					str = str + string(char)
-				}
+func quotes(s string) string {
+	str := ""
+	var removeSpace bool // default false
+	for i, char := range s {
+		if char == 39 && s[i-1] == ' ' {
+			if removeSpace {
+				str = str[:len(str)-1]
+				str = str + string(char)
+				removeSpace = false
+			} else {
+				str = str + string(char)
+				removeSpace = true
+			}
+		} else if i > 1 && s[i-2] == 39 && s[i-1] == ' ' {
+			if removeSpace {
+				str = str[:len(str)-1]
+				str = str + string(char)
 			} else {
 				str = str + string(char)
 			}
+		} else {
+			str = str + string(char)
 		}
-		return str
 	}
-
+	return str
+}
+func ReplacePunt(s string) string {
 	strr := ""
 	result := strings.Fields(s)
 	for _, v := range result {
@@ -192,48 +190,26 @@ func ReplacePunt(s string) string {
 	return quotes(word)
 }
 
-func ReplaceAWithAn(s string) string {
-	firstRune := func(s string) string {
-		vocal := []rune(s)
-		return string(vocal[0])
-	}
+func first_rune(s string) string {
+	vocal := []rune(s)
+	return string(vocal[0])
+}
 
-	var str strings.Builder
+func ReplaceAwhitAn(s string) string {
+	str := ""
 	result := strings.Fields(s)
-
 	for i, v := range result {
-		str.WriteString(v + " ")
-		if v == "a" && (firstRune(result[i+1]) == "a" || firstRune(result[i+1]) == "e" || firstRune(result[i+1]) == "i" || firstRune(result[i+1]) == "o" || firstRune(result[i+1]) == "u" || firstRune(result[i+1]) == "h") {
+		str += v + " "
+		if v == "a" && first_rune(result[i+1]) == "a" || v == "a" && first_rune(result[i+1]) == "e" || v == "a" && first_rune(result[i+1]) == "i" || v == "a" && first_rune(result[i+1]) == "o" || v == "a" && first_rune(result[i+1]) == "u" || v == "a" && first_rune(result[i+1]) == "h" {
 			result[i] = "An"
 		}
 	}
-
 	return strings.Join(result, " ")
 }
 
 func main() {
 
-	// Read the input file
-	file, err := os.ReadFile("input.txt")
-	if err != nil {
-		panic(err)
-	}
-	text := string(file)
-	text = up(text)
-	text = cap(text)
-	text = low(text)
-	text = HexandBin(text)
-	text = ReplaceAWithAn(text)
-	text = ReplacePunt(text)
-	/*
-	   The file permission 0o644 (or 420 in decimal) means that the file can be read and written by the owner of the file,
-
-	   	 and only read by others, just like in the previous example.
-	   	create newfile whit the change
-	*/
-	err = os.WriteFile("output.txt", []byte(text), 0o644)
-	if err != nil {
-		panic(err)
-	}
+	sentence := "There it was. A amazing rock!"
+	fmt.Println(ReplaceAwhitAn(sentence))
 
 }
