@@ -3,7 +3,6 @@ package utils
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 )
@@ -12,8 +11,7 @@ func ReadFile(filepath string) (string, error) {
 	// Open file and handle any errors if unsuccessful
 	file, err := os.Open(filepath)
 	if err != nil {
-		fmt.Println("Error opening file: ", err)
-		return "", err
+		return "", fmt.Errorf("error opening file: %w", err)
 	}
 	defer file.Close() // Close file after
 
@@ -41,7 +39,7 @@ func WriteFile(filepath string, content string) error {
 	// Open and create the file
 	file, err := os.OpenFile(filepath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("error opening the file for writing: %w", err)
 	}
 	defer file.Close()
 
@@ -51,13 +49,13 @@ func WriteFile(filepath string, content string) error {
 	// Write content to the buffer, not yet to file
 	_, err = writer.WriteString(content)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("error writing content to file %w", err)
 	}
 
 	// Flush buffer to ensure all data is written to the file
 	err = writer.Flush()
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("error flushing buffered data: %w", err)
 	}
 
 	// Return a nil error indicating success
