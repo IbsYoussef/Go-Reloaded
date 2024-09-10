@@ -1,6 +1,9 @@
-package textmod
+package text_mod_tests
 
-import "testing"
+import (
+	"go-reloaded/internal/textmod"
+	"testing"
+)
 
 func TestConvertBinToDecimal(t *testing.T) {
 	tests := []struct {
@@ -13,7 +16,7 @@ func TestConvertBinToDecimal(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result := ConvertBinToDecimal(test.input)
+		result := textmod.ConvertBinToDecimal(test.input)
 		if result != test.expected {
 			t.Errorf("For input %s, expected: %s, but got: %s", test.input, test.expected, result)
 		}

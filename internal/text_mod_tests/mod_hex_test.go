@@ -1,6 +1,7 @@
-package textmod
+package text_mod_tests
 
 import (
+	"go-reloaded/internal/textmod"
 	"testing"
 )
 
@@ -21,7 +22,7 @@ func TestConvertHexToDecimal(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result := ConvertHexToDecimal(test.input)
+		result := textmod.ConvertHexToDecimal(test.input)
 		if result != test.expected {
 			t.Errorf("For input: %s, expected: %s, but got: %s", test.input, test.expected, result)
 		}
