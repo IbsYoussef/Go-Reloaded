@@ -1,5 +1,5 @@
 package textmod
 
-func ModifyText(text string) string {
+// func ModifyText(text string) string {
 
-}
+// }

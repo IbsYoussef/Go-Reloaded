@@ -1,5 +1,5 @@
 package textmod
 
-func ChangeCase(text string) string {
+// func ChangeCase(text string) string {
 
-}
+// }
