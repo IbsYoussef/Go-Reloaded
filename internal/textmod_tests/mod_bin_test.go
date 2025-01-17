@@ -16,16 +16,16 @@ func TestConvertBinToDecimal(t *testing.T) {
 		},
 		{
 			input:    "There are 101 (bin) ways to solve this.",
-			expected: "9 files were added",
+			expected: "There are 5 ways to solve this.",
 		},
 		// Edge cases
 		{
 			input:    "(bin) with no preceding binary number.",
-			expected: "(bin) with no preceding  binary number.",
+			expected: "(bin) with no preceding binary number.",
 		},
 		{
 			input:    "This binary 2 (bin) is invalid.",
-			expected: "This binary 2 (bin) is invalid.", // Invalid binary number
+			expected: "This binary 2 (bin) is invalid.",
 		},
 		{
 			input:    "Multiple values: 1 (bin), 10 (bin), and 11 (bin).",
