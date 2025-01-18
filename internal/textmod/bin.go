@@ -2,34 +2,35 @@ package textmod
 
 import (
 	"fmt"
-	"regexp"
 	"strconv"
+	"strings"
 )
 
-// ConvertBinToDecimal replaces instances of (bin) with the decimal equivalent of the preceding binary number.
+// ConvertBinToDecimal replaces instances of a word preceding the (bin) tag with the decimal equivalent of the binary number.
 func ConvertBinToDecimal(text string) string {
-	// Regular expression to match a binary number followed by (bin)
-	re := regexp.MustCompile(`\b([01]+)\s\(bin\)`)
+	if text == "" {
+		return text
+	}
 
-	// Replace all matches with their decimal equivalents
-	result := re.ReplaceAllStringFunc(text, func(match string) string {
-		// Extract the binary number from the match using capture groups
-		submatches := re.FindStringSubmatch(match)
-		if len(submatches) < 2 {
-			return match // Return the original match if no valid binary number found
+	slicedText := strings.Fields(text)
+
+	for i := 0; i < len(slicedText); i++ {
+		if slicedText[i] == "(bin)" {
+			if i > 0 {
+				word := slicedText[i-1]
+				binValue, err := strconv.ParseInt(word, 2, 64)
+				if err != nil {
+					fmt.Println("Error could not convert bin value to string")
+				}
+				strValue := strconv.Itoa(int(binValue))
+				slicedText[i-1] = strValue
+				slicedText = append(slicedText[:i], slicedText[i+1:]...)
+				i--
+			} else {
+				return "Error could not convert bin value to string"
+			}
 		}
+	}
 
-		binaryNumber := submatches[1]
-
-		// Convert the binary number to a decimal integer
-		decimalValue, err := strconv.ParseInt(binaryNumber, 2, 64)
-		if err != nil {
-			return match // Return the original match if conversion fails
-		}
-
-		// Return the decimal value as a string
-		return fmt.Sprintf("%d", decimalValue)
-	})
-
-	return result
+	return strings.Join(slicedText, " ")
 }

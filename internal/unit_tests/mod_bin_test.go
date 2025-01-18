@@ -1,7 +1,7 @@
 package unit_tests
 
 import (
-	"go-reloaded/internal/textmod"
+	bin "go-reloaded/internal/textmod"
 	"testing"
 )
 
@@ -10,44 +10,23 @@ func TestConvertBinToDecimal(t *testing.T) {
 		input    string
 		expected string
 	}{
-		{
-			input:    "It has been 10 (bin) years",
-			expected: "It has been 2 years",
-		},
-		{
-			input:    "There are 101 (bin) ways to solve this.",
-			expected: "There are 5 ways to solve this.",
-		},
-		// Edge cases
-		{
-			input:    "(bin) with no preceding binary number.",
-			expected: "(bin) with no preceding binary number.",
-		},
-		{
-			input:    "This binary 2 (bin) is invalid.",
-			expected: "This binary 2 (bin) is invalid.",
-		},
-		{
-			input:    "Multiple values: 1 (bin), 10 (bin), and 11 (bin).",
-			expected: "Multiple values: 1, 2, and 3.",
-		},
-		{
-			input:    "Binary at the start: 110 (bin) is valid.",
-			expected: "Binary at the start: 6 is valid.",
-		},
-		{
-			input:    "Trailing space after binary: 1010 (bin) .",
-			expected: "Trailing space after binary: 10 .", // Correct handling of trailing spaces
-		},
+		// Test Cases
+		{"", ""}, // Passes
+		{"The binary value is 1010 (bin).", "The binary value is 10"}, // Fails
+		{"There are no binary tags here.", "There are no binary tags here."},
+		{"(bin) 1010 is not valid.", "Error could not convert bin value to string"},
+		{"1010 (bin) (bin) 110 (bin).", "10 (bin) 6."},
+		{"NotBinary (bin) but 110 (bin).", "Error could not convert bin value to string"},
+		{"(bin) is invalid usage.", "Error could not convert bin value to string"},
+		{"0010 (bin) and 0001 (bin).", "2 and 1."},
+		{"Spaces   110 (bin)   are   tricky.", "Spaces 6 are tricky."},
+		{"1101101010101010101010 (bin) is huge.", "1431658 is huge."},
 	}
 
 	for _, test := range tests {
-		t.Run(test.input, func(t *testing.T) {
-			result := textmod.ConvertBinToDecimal(test.input)
-			if result != test.expected {
-				t.Errorf("ConvertBinToDecimal(%q) = %q; want %q", test.input, result, test.expected)
-			}
-		})
+		output := bin.ConvertBinToDecimal(test.input)
+		if output != test.expected {
+			t.Errorf("For input '%s', expected '%s', but got '%s'", test.input, test.expected, output)
+		}
 	}
-
 }

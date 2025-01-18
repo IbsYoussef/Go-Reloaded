@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// ConvertHexToDecinal replaces instances of words preceding a (hex) tag with decimal equivalent of the hexadecimal number
 func ConvertHexToDecimal(text string) string {
 	if text == "" {
 		return text
