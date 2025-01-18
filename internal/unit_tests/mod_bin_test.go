@@ -1,4 +1,4 @@
-package text_mod_tests
+package unit_tests
 
 import (
 	"go-reloaded/internal/textmod"

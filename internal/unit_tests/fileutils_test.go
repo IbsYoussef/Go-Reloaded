@@ -1,6 +1,7 @@
-package utils
+package unit_tests
 
 import (
+	utils "go-reloaded/internal/utils"
 	"io"
 	"os"
 	"testing"
@@ -22,7 +23,7 @@ func TestReadFile(t *testing.T) {
 	tmpFile.Close()
 
 	// Now test the ReadFile function
-	content, err := ReadFile(tmpFile.Name())
+	content, err := utils.ReadFile(tmpFile.Name())
 	if err != nil {
 		t.Errorf("ReadFile returned an error: %v", err)
 	}
@@ -43,7 +44,7 @@ func TestWriteFile(t *testing.T) {
 	testContent := "Writing test content to file\n"
 
 	// Test the WriteFile function
-	err = WriteFile(tmpFile.Name(), testContent)
+	err = utils.WriteFile(tmpFile.Name(), testContent)
 	if err != nil {
 		t.Fatalf("WriteFile returned an error: %v", err)
 	}
