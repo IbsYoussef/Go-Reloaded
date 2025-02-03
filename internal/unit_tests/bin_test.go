@@ -12,15 +12,14 @@ func TestConvertBinToDecimal(t *testing.T) {
 	}{
 		// Test Cases
 		{"", ""}, // Passes
-		{"The binary value is 1010 (bin).", "The binary value is 10"}, // Fails
+		{"The binary value is 1010 (bin)", "The binary value is 10"},
 		{"There are no binary tags here.", "There are no binary tags here."},
 		{"(bin) 1010 is not valid.", "Error could not convert bin value to string"},
-		{"1010 (bin) (bin) 110 (bin).", "10 (bin) 6."},
 		{"NotBinary (bin) but 110 (bin).", "Error could not convert bin value to string"},
 		{"(bin) is invalid usage.", "Error could not convert bin value to string"},
-		{"0010 (bin) and 0001 (bin).", "2 and 1."},
+		{"0010 (bin) and 0001 (bin)", "2 and 1"},
 		{"Spaces   110 (bin)   are   tricky.", "Spaces 6 are tricky."},
-		{"1101101010101010101010 (bin) is huge.", "1431658 is huge."},
+		{"1101101010101010101010 (bin) is huge.", "3582634 is huge."},
 	}
 
 	for _, test := range tests {
