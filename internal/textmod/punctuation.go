@@ -1,5 +1,5 @@
 package textmod
 
-// func ModifyPunctuation(text string) string {
+// func ModifyPunctuationAndQuotes(text string) string {
 
 // }
