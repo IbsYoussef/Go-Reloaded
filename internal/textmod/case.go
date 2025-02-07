@@ -70,5 +70,13 @@ func ChangeCase(text string) string {
 			}
 		}
 	}
-	return strings.Join(strSlice, " ")
+
+	finalStringoutput := []string{}
+	for _, str := range strSlice {
+		if str != "" {
+			finalStringoutput = append(finalStringoutput, str)
+		}
+	}
+
+	return strings.Join(finalStringoutput, " ")
 }
