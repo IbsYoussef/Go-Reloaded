@@ -1,7 +1,7 @@
 package unit_tests
 
 import (
-	bin "go-reloaded/internal/textmod"
+	"go-reloaded/internal/textmod"
 	"testing"
 )
 
@@ -23,7 +23,7 @@ func TestConvertBinToDecimal(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		output := bin.ConvertBinToDecimal(test.input)
+		output := textmod.ConvertBinToDecimal(test.input)
 		if output != test.expected {
 			t.Errorf("For input '%s', expected '%s', but got '%s'", test.input, test.expected, output)
 		}
