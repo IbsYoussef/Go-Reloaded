@@ -55,7 +55,7 @@ func main() {
 	inputContent = textmod.ModifyText(inputContent)
 
 	// Write the processed content to the output file.
-	err = utils.WriteFile(outputFile, inputContent)
+	err = utils.WriteFile(outputPath, inputContent)
 	if err != nil {
 		fmt.Printf("Error writing to file %s: %v\n", outputPath, err)
 		return
