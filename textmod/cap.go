@@ -6,7 +6,7 @@ import (
 	"unicode"
 )
 
-func cap(s string) string {
+func Cap(s string) string {
 	capitalizeWord := func(word string) string {
 		// Convert the word to a rune slice to process individual characters
 		runes := []rune(word)
