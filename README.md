@@ -4,14 +4,14 @@
 It adjusts punctuation spacing, corrects quote placement, and modifies text case based on inline tags.
 
 ## Table of Contents
--[About](#about)
--[Features](#features)
--[Installation](#installation)
--[Usage](#usage)
--[File structure](#file-structure)
--[Testing](#testing)
--[Contributing](#contributing)
--[License](#license)
+1. [📝 About](#about)
+2. [✨ Features](#features)
+3. [📦 Installation](#installation)
+4. [🚀 Usage](#usage)
+5. [📁 File structure](#file-structure)
+6. [⚙️ Testing](#testing)
+7. [🤝 Contributions](#contributing)
+8. [📄 License](#license)
 
 ## About
 **Go-Reloaded** automates the cleanup and formatting of text files by applying a variety of modifications based on inline tags. This helps ensure that your documents follow consistent styling rules and improves their overall readability.
