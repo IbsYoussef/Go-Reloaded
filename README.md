@@ -9,7 +9,7 @@ It adjusts punctuation spacing, corrects quote placement, and modifies text case
 3. [📦 Installation](#-installation)
 4. [🚀 Usage](#-usage)
 5. [📁 File structure](#-file-structure)
-6. [⚙️ Testing](#-testing)
+6. 6. [⚙️ Testing](#️-testing)
 7. [🤝 Contributions](#-contributions)
 8. [🙏 Acknowledgements](#-acknowledgements)
 9. [📄 License](#-license)
@@ -236,14 +236,14 @@ To run all tests in the project with detailed (verbose) output, execute the foll
 
 - **Run all the tests** in the ```unit_tests``` folder:
 ```bash
-go test ./unit_tests -v
+go test -v ./unit_tests 
 ```
 
 ### Running Individual tests
 
 - **Run tests in a specific file (e.g., ```case_tests.go```):
 ```bash
-go test ./unit_tests/case_test.go -v
+go test -v ./unit_tests/case_test.go 
 ```
 
 ## 🤝 Contributions
