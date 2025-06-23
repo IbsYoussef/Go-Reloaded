@@ -4,16 +4,17 @@
 It adjusts punctuation spacing, corrects quote placement, and modifies text case based on inline tags.
 
 ## Table of Contents
-1. [📝 About](#about)
-2. [✨ Features](#features)
-3. [📦 Installation](#installation)
-4. [🚀 Usage](#usage)
-5. [📁 File structure](#file-structure)
-6. [⚙️ Testing](#testing)
-7. [🤝 Contributions](#contributing)
-8. [📄 License](#license)
+1. [📝 About](#-about)
+2. [✨ Features](#-features)
+3. [📦 Installation](#-installation)
+4. [🚀 Usage](#-usage)
+5. [📁 File structure](#-file-structure)
+6. [⚙️ Testing](#-testing)
+7. [🤝 Contributions](#-contributions)
+8. [🙏 Acknowledgements](#-acknowledgements)
+9. [📄 License](#-license)
 
-## About
+## 📝 About
 **Go-Reloaded** automates the cleanup and formatting of text files by applying a variety of modifications based on inline tags. This helps ensure that your documents follow consistent styling rules and improves their overall readability.
 
 ### What it does
@@ -132,7 +133,7 @@ In today’s world of data and text processing, clean and consistently formatted
 
 In a nutshell, **go-reloaded** is designed to streamline the text formatting process, ensuring that your documents look professional and are easy to read—whether you're preparing data for analysis, publishing content, or simply cleaning up raw text.
 
-## Features
+## ✨ Features
 - **Punctuation Formatting:**  
   Automatically adjusts spacing around punctuation, ensuring proper attachment to words and consistent spacing.
   
@@ -150,7 +151,7 @@ In a nutshell, **go-reloaded** is designed to streamline the text formatting pro
 
 For detailed examples and explanations of each feature, please see the [About](#about) section.
 
-## Installation
+## 📦 Installation
 
 Steps to install and run **go-reloaded**:
 
@@ -174,7 +175,7 @@ This command clones the repository to your local machine and navigates into the 
 
 4. **Dependencies** This project requires Go 1.16 or later. All dependencies are managed through Go Modules, so no additional package installations are required.
 
-## Usage
+## 🚀 Usage
 **Go-Reloaded** is designed to be run from the command line with two arguments: the input filename and the output filename. The program automatically assumes that:
 - Input files are located in the `text-files` directory.
 - Processed output files will be written to the `outputs` directory.
@@ -185,7 +186,7 @@ To run the program, use the following command:
     go run ./cmd <input_filename> <output_filename>
 ```
 
-## File structure
+## 📁 File structure
 ```
 .
 ├── README.md
@@ -226,7 +227,7 @@ To run the program, use the following command:
 8 directories, 27 files
 ```
 
-## Testing
+## ⚙️ Testing
 To ensure that **go-reloaded** works as expected, a comprehensive suite of unit tests is provided in the `unit_tests` folder. You can run these tests to verify the functionality of different parts of the project.
 
 ### Running All Tests
@@ -245,7 +246,7 @@ go test ./unit_tests -v
 go test ./unit_tests/case_test.go -v
 ```
 
-## Contributing
+## 🤝 Contributions
 Contributions are welcome! If you'd like to help improve **go-reloaded**, please follow these steps:
 
 1. **Fork the Repository:**  
@@ -272,7 +273,10 @@ If you're not sure about a major change, open an issue first to discuss your ide
 
 Thank you for helping make go-reloaded even better!
 
-## License
+## 🙏 Acknowledgements
+- Created as part of my Go learning journey at 01 Founders
+
+## 📄 License
 This project is licensed under the [MIT License](LICENSE).
 
 Acknowledgements
