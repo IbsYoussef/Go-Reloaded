@@ -158,7 +158,7 @@ Steps to install and run **go-reloaded**:
 1. **Clone the Repository:**
 This command clones the repository to your local machine and navigates into the project directory
     ```bash
-    git clone https://github.com/IbsYoussef/Go-Reloaded.git
+    git clone https://learn.01founders.co/git/iyoussef/Go-Reloaded.git
     cd go-reloaded
     ```
 
