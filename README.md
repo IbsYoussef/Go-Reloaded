@@ -97,7 +97,7 @@ Smart grammar fixes:
 
 ```bash
 # Clone the repository
-git clone https://github.com/IbsYoussef/Go-Reloaded.git
+git clone https://learn.01founders.co/git/iyoussef/Go-Reloaded.git
 cd Go-Reloaded
 
 # Verify installation
