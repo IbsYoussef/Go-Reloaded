@@ -24,6 +24,8 @@
 - [Project Structure](#project-structure)
 - [How It Works](#how-it-works)
 - [License](#license)
+- [Author](#author)
+- [Acknowledgements](#acknowledgements)
 
 ---
 
@@ -398,23 +400,11 @@ See [LICENSE.txt](LICENSE.txt) for full details.
 
 ---
 
-## 🙏 Acknowledgements
-
-- Built as part of the **01 Founders** Piscine-Go curriculum
-- Inspired by real-world text processing challenges
-- Thanks to the Go community for excellent documentation
-
----
-
-## 🐛 Issues & Feedback
-
-Found a bug or have a suggestion? Feel free to open an issue or contribute!
-
----
-
 ## 👤 Author
 
 **[IbsYoussef](https://github.com/IbsYoussef)** - Built as part of the 01 Founders Piscine-Go curriculum.
+
+---
 
 ## 🙏 Acknowledgements
 
