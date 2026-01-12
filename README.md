@@ -15,17 +15,17 @@
 
 ## 📋 Table of Contents
 
-- [About](#about)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Examples](#examples)
-- [Testing](#testing)
-- [Project Structure](#project-structure)
-- [How It Works](#how-it-works)
-- [License](#license)
-- [Author](#author)
-- [Acknowledgements](#acknowledgements)
+- [🎯 About](#about)
+- [✨ Features](#features)
+- [🚀 Installation](#installation)
+- [💻 Usage](#usage)
+- [📚 Examples](#examples)
+- [🧪 Testing](#testing)
+- [📁 Project Structure](#project-structure)
+- [🔧 How It Works](#how-it-works)
+- [📄 License](#license)
+- [👤 Author](#author)
+- [🙏 Acknowledgements](#acknowledgements)
 
 ---
 
