@@ -1,1 +1,7 @@
 .vscode/
+
+# Workspace - user files (don't commit)
+workspace/input/*
+workspace/output/*
+!workspace/input/.gitkeep
+!workspace/output/.gitkeep
