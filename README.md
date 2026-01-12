@@ -1,293 +1,431 @@
-# Go-Reloaded
+# Go Reloaded
 
-**Go-Reloaded** is a command-line text processing utility program written in Go that applies formatting and text modification rules to text files. 
-It adjusts punctuation spacing, corrects quote placement, and modifies text case based on inline tags.
+<div align="center">
 
-## Table of Contents
-1. [📝 About](#-about)
-2. [✨ Features](#-features)
-3. [📦 Installation](#-installation)
-4. [🚀 Usage](#-usage)
-5. [📁 File structure](#-file-structure)
-6. [⚙️ Testing](#️-testing)
-7. [🤝 Contributions](#-contributions)
-8. [🙏 Acknowledgements](#-acknowledgements)
-9. [📄 License](#-license)
+[![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)](https://golang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-## 📝 About
-**Go-Reloaded** automates the cleanup and formatting of text files by applying a variety of modifications based on inline tags. This helps ensure that your documents follow consistent styling rules and improves their overall readability.
+![Demo](assets/demo.gif)
 
-### What it does
+**Intelligent text processing and formatting tool built in Go**
 
-**go-reloaded** performs several types of text modifications:
+</div>
 
-#### 1. Punctuation Formatting
-- **Purpose:**  
-  Adjusts spacing around punctuation marks (such as `.`, `,`, `!`, `?`, `:`, and `;`) so that they are attached directly to the previous word and followed by exactly one space.
-- **Example:**  
-  - Input:  
-    ```
-    I was sitting over there ,and then BAMM !!
-    ```
-  - Output:  
-    ```
-    I was sitting over there, and then BAMM!!
-    ```
+---
 
-#### 2. Quote Formatting
-- **Purpose:**  
-  Ensures that single quotes are positioned directly next to the text they enclose by removing any extra spaces. Whether the quotes wrap a single word or multiple words, the tool "hugs" the content without additional spacing.
-- **Example:**  
-  - Input:  
-    ```
-    I am exactly how they describe me: ' awesome '
-    ```
-  - Output:  
-    ```
-    I am exactly how they describe me: 'awesome'
-    ```
+## 📋 Table of Contents
 
-#### 3. Text Case Modification
+- [About](#about)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Testing](#testing)
+- [Project Structure](#project-structure)
+- [How It Works](#how-it-works)
+- [License](#license)
 
-- **Purpose:**  
-  Recognizes inline tags such as `(up)`, `(low)`, and `(cap)` to modify the case of the preceding word. It also supports numbered variants—for example, `(up, 3)` will convert the last three words before the tag to uppercase.
+---
 
-- **Simple Example:**  
-  - **Input:**  
-    ```
-    hello (up)
-    ```  
-  - **Output:**  
-    ```
-    HELLO
-    ```
+## 🎯 About
 
-- **Numbered Variant Example:**  
-  - **Input:**  
-    ```
-    one two three four five (up, 3)
-    ```  
-  - **Output:**  
-    ```
-    one two THREE FOUR FIVE
-    ```
-  - **Explanation:**  
-    In this example, the tag `(up, 3)` tells the program to convert the three words immediately preceding it to uppercase. Thus, "three", "four", and "five" become "THREE", "FOUR", and "FIVE", while "one" and "two" remain unchanged.
+**Go Reloaded** is a command-line text processing utility that automatically applies formatting and text modification rules to transform messy text into clean, properly formatted content. It handles punctuation spacing, quote formatting, case modifications, numeric conversions, and grammatical corrections.
 
-#### 4. Numeric Conversion
+Built as part of the 01 Founders curriculum, this project demonstrates proficiency in:
 
-**Binary Conversion (`(bin)` tag):**  
-- **Purpose:**  
-  Converts a binary number (base 2) to its decimal (base 10) equivalent. When the `(bin)` tag immediately follows a binary string, the tool parses the preceding word as a binary number and replaces it with the corresponding decimal value.  
-- **Example:**  
-  - **Input:**  
-    ```
-    1010 (bin)
-    ```  
-  - **Output:**  
-    ```
-    10
-    ```  
-  *Explanation:* The binary number `1010` is converted to the decimal number `10`.
+- Text parsing and manipulation
+- Regular expressions and pattern matching
+- File I/O operations
+- Modular Go architecture
+- Comprehensive unit testing
 
-**Hexadecimal Conversion (`(hex)` tag):**  
-- **Purpose:**  
-  Converts a hexadecimal number (base 16) to its decimal (base 10) equivalent. When the `(hex)` tag immediately follows a hexadecimal string, the tool parses the preceding word as a hexadecimal number and replaces it with its decimal value.  
-- **Example:**  
-  - **Input:**  
-    ```
-    1A (hex)
-    ```  
-  - **Output:**  
-    ```
-    26
-    ```  
-  *Explanation:* The hexadecimal number `1A` is converted to the decimal number `26`.
-
-#### 5. Article Correction (`ConvertAtoAn`)
-- **Purpose:**  
-  Automatically converts instances of the article "a" to "an" when the following word begins with a vowel sound.
-- **How It Works:**  
-  The function scans the text for occurrences of "a" (or "A") and checks if the next word starts with one of the vowels (`a`, `e`, `i`, `o`, `u` in either case). If so, it appends an "n" to change "a" to "an".
-- **Example:**  
-  - Input:  
-    ```
-    a apple
-    ```
-  - Output:  
-    ```
-    an apple
-    ```
-
-### Why Use go-reloaded?
-
-In today’s world of data and text processing, clean and consistently formatted text is essential for readability and professional presentation. **go-reloaded** offers:
-- **Automated Formatting:**  
-  It eliminates manual editing by automatically correcting common formatting issues.
-- **Multiple Functionalities:**  
-  It not only fixes punctuation and quotes but also handles numerical conversions and grammatical corrections.
-- **Simplicity and Efficiency:**  
-  With an easy-to-use command-line interface, you simply supply the input and output filenames, and the tool processes the text efficiently.
-- **Extensibility:**  
-  Written in Go with a modular design, it’s easy to extend the functionality further or integrate with other systems.
-
-In a nutshell, **go-reloaded** is designed to streamline the text formatting process, ensuring that your documents look professional and are easy to read—whether you're preparing data for analysis, publishing content, or simply cleaning up raw text.
+---
 
 ## ✨ Features
-- **Punctuation Formatting:**  
-  Automatically adjusts spacing around punctuation, ensuring proper attachment to words and consistent spacing.
-  
-- **Quote Formatting:**  
-  Corrects spacing around single quotes so that quoted text appears neatly enclosed.
-  
-- **Text Case Modification:**  
-  Supports inline tags like `(up)`, `(low)`, `(cap)` and their numbered variants to change text case effortlessly.
-  
-- **Numeric Conversion:**  
-  Converts binary (`(bin)`) and hexadecimal (`(hex)`) numbers to their decimal equivalents.
-  
-- **Article Correction:**  
-  Automatically changes "a" to "an" when appropriate (e.g., before vowel sounds).
 
-For detailed examples and explanations of each feature, please see the [About](#about) section.
+### 🔤 **Text Case Modification**
 
-## 📦 Installation
+Transform text case with inline tags:
 
-Steps to install and run **go-reloaded**:
+- `(up)` - Convert to UPPERCASE
+- `(low)` - Convert to lowercase
+- `(cap)` - Capitalize First Letter
+- `(up, N)` - Convert last N words to UPPERCASE
+- `(low, N)` - Convert last N words to lowercase
+- `(cap, N)` - Capitalize last N words
 
-1. **Clone the Repository:**
-This command clones the repository to your local machine and navigates into the project directory
-    ```bash
-    git clone https://learn.01founders.co/git/iyoussef/Go-Reloaded.git
-    cd go-reloaded
-    ```
+### 📐 **Punctuation Formatting**
 
-2. **Build the project:** Build the executable by running:
-    ```bash
-    go build ./cmd
-    ```
-3. **Run the Project:** You can run the project directly without building a seperate executable:
-    ```bash
-    go run ./cmd <input_filename.txt> <output_filename.txt>
-    ```
-    - **Note**:
-    By default, input files should be placed in the text-files folder, and output files will be created in the outputs folder.
+Automatically fix spacing around punctuation marks:
 
-4. **Dependencies** This project requires Go 1.16 or later. All dependencies are managed through Go Modules, so no additional package installations are required.
+- Attach punctuation to preceding word
+- Add proper spacing after punctuation
+- Handle `.` `,` `!` `?` `:` `;`
 
-## 🚀 Usage
-**Go-Reloaded** is designed to be run from the command line with two arguments: the input filename and the output filename. The program automatically assumes that:
-- Input files are located in the `text-files` directory.
-- Processed output files will be written to the `outputs` directory.
+### 💬 **Quote Formatting**
 
-### Running the program
-To run the program, use the following command:
-```go
-    go run ./cmd <input_filename> <output_filename>
-```
+Clean up quote placement:
 
-## 📁 File structure
-```
-.
-├── README.md
-├── cmd
-│   ├── main.go
-│   ├── outputs
-│   │   ├── result-1.txt
-│   │   ├── result-2.txt
-│   │   ├── result-3.txt
-│   │   ├── result-4.txt
-│   │   └── result-5.txt
-│   └── text-files
-│       ├── sample-1.txt
-│       ├── sample-2.txt
-│       ├── sample-3.txt
-│       ├── sample-4.txt
-│       └── sample-5.txt
-├── go.mod
-├── go.sum
-├── internal
-│   ├── textmod
-│   │   ├── a_an.go
-│   │   ├── bin.go
-│   │   ├── case.go
-│   │   ├── hex.go
-│   │   ├── punctuation.go
-│   │   └── textmod.go
-│   └── utils
-│       └── fileutils.go
-└── unit_tests
-    ├── a_an_test.go
-    ├── bin_test.go
-    ├── case_test.go
-    ├── fileutils_test.go
-    ├── hex_test.go
-    └── punctuation_test.go
+- Remove extra spaces inside quotes
+- Properly attach quotes to enclosed text
+- Handle single quotes (`'`)
 
-8 directories, 27 files
-```
+### 🔢 **Numeric Conversion**
 
-## ⚙️ Testing
-To ensure that **go-reloaded** works as expected, a comprehensive suite of unit tests is provided in the `unit_tests` folder. You can run these tests to verify the functionality of different parts of the project.
+Convert between number systems:
 
-### Running All Tests
+- `(bin)` - Binary to decimal (e.g., `1010 (bin)` → `10`)
+- `(hex)` - Hexadecimal to decimal (e.g., `1A (hex)` → `26`)
 
-To run all tests in the project with detailed (verbose) output, execute the following command from the root directory of the project:
+### 📝 **Article Correction**
 
-- **Run all the tests** in the ```unit_tests``` folder:
+Smart grammar fixes:
+
+- Automatically change "a" to "an" before vowel sounds
+- Handles both uppercase and lowercase
+
+---
+
+## 🚀 Installation
+
+### Prerequisites
+
+- Go 1.16 or later
+- Git
+
+### Setup
+
 ```bash
-go test -v ./unit_tests 
+# Clone the repository
+git clone https://github.com/IbsYoussef/Go-Reloaded.git
+cd Go-Reloaded
+
+# Verify installation
+go version
 ```
 
-### Running Individual tests
+---
 
-- **Run tests in a specific file (e.g., ```case_tests.go```):
+## 💻 Usage
+
+### Basic Command
+
 ```bash
-go test -v ./unit_tests/case_test.go 
+go run ./cmd <input-filename> <output-filename>
 ```
 
-## 🤝 Contributions
-Contributions are welcome! If you'd like to help improve **go-reloaded**, please follow these steps:
+**Important:**
 
-1. **Fork the Repository:**  
-   Click the "Fork" button at the top-right of the repository page to create your own copy of the project.
+- Input files must be placed in `text-files/` directory
+- Output will be written to `outputs/` directory
+- Specify only the filename, not the full path
 
-2. **Create a New Branch:**  
-   Create a new branch for your feature or bug fix:
-   ```bash
-    git checkout -b feature-or-bugfix-description
-   ```
-3. **Make your Changes:**
-Implement your changes and ensure that your code adheres to the project's style guidelines.
-Tip: Write or update tests as needed.
+### Quick Start
 
-4. **Commit and Push your Changes**:
-Commit your changes with a clear, descriptive message and push your branch to your forked repository:
-    ```bash
-    git commit -m "Add: description of your changes"
-    git push origin feature-or-bugfix-description
-    ```
-5. **Open a Pull Request**:
-Open a pull request (PR) from your branch to the main repository. Please include a clear description of your changes and the motivation behind them.
-If you're not sure about a major change, open an issue first to discuss your ideas.
+```bash
+# Try with sample files
+go run ./cmd sample-1.txt result-1.txt
+go run ./cmd sample-2.txt result-2.txt
+go run ./cmd sample-5.txt result-5.txt
 
-Thank you for helping make go-reloaded even better!
+# Check the results
+cat outputs/result-1.txt
+```
 
-## 🙏 Acknowledgements
-- Created as part of my Go learning journey at 01 Founders
+### Using Your Own Files
+
+1. **Place your input file** in `text-files/` directory
+2. **Run the command:**
+
+```bash
+   go run ./cmd myfile.txt myoutput.txt
+```
+
+3. **Check the result** in `outputs/myoutput.txt`
+
+---
+
+## 📚 Examples
+
+### Example 1: Case Modification
+
+**Input:** `text-files/sample-1.txt`
+
+```
+it (cap) was the best of times, it was the worst of times (up) ,
+it was the age of wisdom, it was the age of foolishness (cap, 6)
+```
+
+**Output:** `outputs/result-1.txt`
+
+```
+It was the best of times, it was the worst of TIMES,
+it was the age of wisdom, It Was The Age Of Foolishness
+```
+
+---
+
+### Example 2: Multiple Transformations
+
+**Input:** `text-files/sample-2.txt`
+
+```
+If I make you BREAKFAST IN BED (low, 3) just say thank you instead of: how (cap) did you get in my house (up, 2) ?
+```
+
+**Output:** `outputs/result-2.txt`
+
+```
+If I make you breakfast in bed just say thank you instead of: How did you get in MY HOUSE?
+```
+
+---
+
+### Example 3: Numeric Conversion
+
+**Input:** `text-files/sample-3.txt`
+
+```
+I have to pack 101 (bin) outfits. Packed 1a (hex) just to be sure
+```
+
+**Output:** `outputs/result-3.txt`
+
+```
+I have to pack 5 outfits. Packed 26 just to be sure
+```
+
+---
+
+### Example 4: Punctuation Formatting
+
+**Input:** `text-files/sample-4.txt`
+
+```
+Don not be sad ,because sad backwards is das . And das not good
+```
+
+**Output:** `outputs/result-4.txt`
+
+```
+Don not be sad, because sad backwards is das. And das not good
+```
+
+---
+
+### Example 5: Article Correction & Quotes
+
+**Input:** `text-files/sample-5.txt`
+
+```
+harold wilson (cap, 2) : ' I am a optimist ,but a optimist who carries a raincoat . '
+```
+
+**Output:** `outputs/result-5.txt`
+
+```
+Harold Wilson: 'I am an optimist, but an optimist who carries a raincoat.'
+```
+
+---
+
+## 🧪 Testing
+
+### Run All Tests
+
+```bash
+# Run complete test suite
+go test -v ./unit_tests/
+
+# Run with coverage
+go test -v -cover ./unit_tests/
+```
+
+### Run Specific Tests
+
+```bash
+# Test case modifications
+go test -v ./unit_tests/ -run TestCase
+
+# Test hexadecimal conversion
+go test -v ./unit_tests/ -run TestHex
+
+# Test binary conversion
+go test -v ./unit_tests/ -run TestBin
+
+# Test punctuation formatting
+go test -v ./unit_tests/ -run TestPunctuation
+
+# Test article correction
+go test -v ./unit_tests/ -run TestA_An
+
+# Test file utilities
+go test -v ./unit_tests/ -run TestFileUtils
+```
+
+### Test Coverage
+
+The project includes comprehensive unit tests for:
+
+- ✅ Case transformations (`case_test.go`)
+- ✅ Hexadecimal conversion (`hex_test.go`)
+- ✅ Binary conversion (`bin_test.go`)
+- ✅ Punctuation formatting (`punctuation_test.go`)
+- ✅ Article correction (`a_an_test.go`)
+- ✅ File operations (`fileutils_test.go`)
+
+---
+
+## 📁 Project Structure
+
+```
+Go-Reloaded/
+├── cmd/
+│   └── main.go              # Entry point and CLI interface
+├── text-files/              # Input files directory
+│   ├── sample-1.txt         # Case modification example
+│   ├── sample-2.txt         # Multiple transformations
+│   ├── sample-3.txt         # Numeric conversion
+│   ├── sample-4.txt         # Punctuation formatting
+│   └── sample-5.txt         # Article & quote formatting
+├── outputs/                 # Output files directory (generated results)
+├── internal/
+│   ├── textmod/             # Text modification logic
+│   │   ├── textmod.go       # Main text processing
+│   │   ├── case.go          # Case transformations
+│   │   ├── punctuation.go   # Punctuation formatting
+│   │   ├── a_an.go          # Article correction
+│   │   ├── hex.go           # Hex conversion
+│   │   └── bin.go           # Binary conversion
+│   └── utils/
+│       └── fileutils.go     # File I/O operations
+├── unit_tests/              # Comprehensive test suite
+│   ├── case_test.go
+│   ├── punctuation_test.go
+│   ├── a_an_test.go
+│   ├── hex_test.go
+│   ├── bin_test.go
+│   └── fileutils_test.go
+├── assets/
+│   └── demo.gif             # Demo recording
+├── go.mod                   # Go module definition
+├── go.sum                   # Go dependencies
+├── LICENSE.txt              # MIT License
+└── README.md                # This file
+```
+
+---
+
+## 🔧 How It Works
+
+### Processing Pipeline
+
+```
+Input File → Read → Modify Text → Write → Output File
+```
+
+### Modification Order
+
+1. **Numeric Conversions** - Convert hex/binary to decimal
+2. **Case Modifications** - Apply (up), (low), (cap) transformations
+3. **Article Correction** - Fix "a" → "an" before vowels
+4. **Punctuation Formatting** - Adjust spacing around punctuation
+5. **Quote Formatting** - Clean up quote placement
+
+### Core Modules
+
+**`textmod.go`**
+
+- Orchestrates all text modifications
+- Applies transformations in correct order
+- Ensures no conflicts between operations
+
+**`case.go`**
+
+- Handles uppercase, lowercase, and capitalization
+- Supports numbered variants (e.g., `(up, 3)`)
+- Preserves text structure
+
+**`punctuation.go`**
+
+- Fixes spacing around `.` `,` `!` `?` `:` `;`
+- Ensures proper attachment to words
+- Maintains readability
+
+**`a_an.go`**
+
+- Detects vowel sounds
+- Converts "a" to "an" automatically
+- Preserves original case
+
+**`hex.go` & `bin.go`**
+
+- Convert number systems to decimal
+- Validate input format
+- Handle edge cases
+
+---
 
 ## 📄 License
-This project is licensed under the [MIT License](LICENSE).
 
-Acknowledgements
-Special Thanks:
-Thanks to all contributors, mentors, and peers who provided feedback and support during the development of go-reloaded.
+This project is licensed under the **MIT License**.
 
-Inspiration:
-This project was inspired by best practices in Go development and the need for automated text formatting solutions.
+```
+MIT License
 
-Resources:
+Copyright (c) 2025 IbsYoussef
 
-The MIT License
-Various open-source projects and communities that encourage collaboration and learning.
-Thank you for checking out go-reloaded! We hope this tool helps streamline your text processing tasks and that you find it both useful and easy to contribute to.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+See [LICENSE.txt](LICENSE.txt) for full details.
+
+---
+
+## 🙏 Acknowledgements
+
+- Built as part of the **01 Founders** Piscine-Go curriculum
+- Inspired by real-world text processing challenges
+- Thanks to the Go community for excellent documentation
+
+---
+
+## 🐛 Issues & Feedback
+
+Found a bug or have a suggestion? Feel free to open an issue or contribute!
+
+---
+
+## 👤 Author
+
+**[IbsYoussef](https://github.com/IbsYoussef)** - Built as part of the 01 Founders Piscine-Go curriculum.
+
+## 🙏 Acknowledgements
+
+- Built as part of the **[01 Founders](https://01-edu.org/)** Piscine-Go curriculum
+- Inspired by real-world text processing challenges
+- Thanks to the Go community for excellent documentation
+
+---
+
+<div align="center">
+
+**[⬆ Back to Top](#go-reloaded)**
+
+</div>
